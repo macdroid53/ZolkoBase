@@ -15,6 +15,8 @@
       <tag>color</tag>
       <tag>dark</tag>
       <tag>mechanical</tag>
+      <depend>Lattice2 Workbench</depend>
+      <depend>Glass</depend>
     </preferencepack>
   </content>
 
