@@ -16,6 +16,9 @@
       <tag>dark</tag>
       <tag>mechanical</tag>
       <depend>TabBar</depend>
+      <depend>Glass</depend>
+      <depend>Lattice2 Workbench</depend>
+      <depend>Manipulator Workbench</depend>
     </preferencepack>
   </content>
 
