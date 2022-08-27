@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
+  <name>ZolkoBase</name>
+  <description>Zolko based PrefPack for FreeCAD</description>
+  <version>0.0.1</version>
+  <maintainer email="macdroid53@gmail.com">drmacro</maintainer>
+  <license file="LICENSE">MIT</license>
+  <url type="repository" branch="main">https://github.com/macdroid53/ZolkoBase</url>
+  <icon>resources/icons/freecad.svg</icon>
+
+  <content>
+    <preferencepack>
+      <name>ZolkoBase</name>
+      <description>Zolko based PrefPack for FreeCAD</description>
+      <tag>color</tag>
+      <tag>dark</tag>
+      <tag>mechanical</tag>
+      <depend>TabBar</depend>
+    </preferencepack>
+  </content>
+
+</package>

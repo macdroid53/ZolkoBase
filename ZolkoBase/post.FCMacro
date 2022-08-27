@@ -1,0 +1,77 @@
+# -*- coding: utf-8 -*-
+import os 
+import FreeCAD
+from PySide2 import QtGui, QtCore, QtWidgets
+import xml.dom.minidom
+
+def get_group(fnm, param_path):
+    '''Return the node specified in param_path
+    example: "User parameter:Tux/PersistentToolbars/User"
+    will return User node for further processing'''
+    doc = xml.dom.minidom.parse(fnm)
+    cur_node = doc.childNodes[0]
+    node_names = ["Root"] + param_path.split(":")[1].split("/")
+
+    for node_name in node_names:
+        for child in cur_node.childNodes:
+            if hasattr(child, "getAttribute") and child.getAttribute("Name") == node_name:
+                cur_node = child
+                break
+        else:
+            return None
+    return cur_node
+
+def get_children(agroup):
+    if hasattr(agroup, "getAttribute"):
+        print(agroup.getAttribute("Name"))
+        param_grp=FreeCAD.ParamGet("User parameter:Tux/PersistentToolbars/User/" + agroup.getAttribute("Name"))
+        if agroup.hasChildNodes():
+            for ch_node in agroup.childNodes:
+                if  hasattr(ch_node, "getAttribute") and ch_node.getAttribute("Name"):
+                    #print(ch_node.nodeName + ':' + ch_node.getAttribute("Name") + ':' + ch_node.getAttribute("Value") + ':')
+                    if ch_node.nodeName == "FCBool":
+                        print(ch_node.nodeName + ':' + ch_node.getAttribute("Name") + ':' + str(bool(ch_node.getAttribute("Value"))))
+                        param_grp.SetBool(ch_node.getAttribute("Name"),bool(ch_node.getAttribute("Value")))
+                        print("added")
+                    elif ch_node.nodeName == "FCText":
+                        child_val = ""
+                        if ch_node.hasChildNodes():
+                            child_val = ch_node.firstChild._get_data()
+                        print(ch_node.nodeName + ':' + ch_node.getAttribute("Name") + ':' + child_val)
+                        param_grp.SetString(ch_node.getAttribute("Name"),child_val)
+            print()
+    #print(agroup.getAttribute("Name"))
+    pass
+
+
+#param_grp=FreeCAD.ParamGet("User parameter:BaseApp/Preferences/General")
+#param_grp.SetString("AutoloadModule", "PartDesignWorkbench")
+#param_grp=FreeCAD.ParamGet("User parameter:Tux/PersistentToolbars/User/StartWorkbench")
+#param_grp.SetBool("Saved",True)
+#param_grp.SetString("Top", "Workbench,Macro,Break,View,Structure,Navigation")
+#param_grp.SetString("Left", "File")
+#param_grp.SetString("Right", "")
+#param_grp.SetString("Bottom", "")
+#param_grp=FreeCAD.ParamGet("User parameter:Tux/PersistentToolbars/User/PartDesignWorkbench")
+#param_grp.SetBool("Saved",True)
+#param_grp.SetString("Top", "Workbench,Macro,Break,View,Structure,Navigation")
+#param_grp.SetString("Left", "File")
+#param_grp.SetString("Right", "")
+#param_grp.SetString("Bottom", "")
+param_grp=FreeCAD.ParamGet("User parameter:BaseApp/MainWindow/DockWindows")
+param_grp.SetBool("Std_ReportView", True)
+param_grp.SetBool("Std_PythonView", True)
+
+pp_cfg_path='/home/mac/.local/share/FreeCAD/Mod/ZolkoBase/ZolkoBase/ZolkoBase.cfg'
+xml_tree_path = "User parameter:Tux/PersistentToolbars/User"
+benches = get_group(pp_cfg_path, xml_tree_path)
+#presumably benches will contain children that are the nodes for each bench
+#defined in "User parameter:Tux/PersistentToolbars/User"
+#get_children will process the child nodes of each bench
+for bench in benches.childNodes:
+    get_children(bench)
+
+msg="To complete the changes, restart FreeCAD!"
+diag = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Information, 'Restart Required', msg)
+diag.setWindowModality(QtCore.Qt.ApplicationModal)
+diag.exec_()
