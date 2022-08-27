@@ -15,7 +15,7 @@
       <tag>color</tag>
       <tag>dark</tag>
       <tag>mechanical</tag>
-      <depend>TabBar</depend>
+      <depend></depend>
     </preferencepack>
   </content>
 
